@@ -1,0 +1,56 @@
+Problem
+Given a graph with non-negative costs and two vertices s and t, find a minimum cost walk from s to t.
+Idea
+Dijkstra's algorithm still relies on Bellman's optimality principle; however, it computes distances from the starting vertex in increasing order of the distances. This way, the distance from start to a given vertex doesn't have to be recomputed after the vertex is processed.
+
+This way, Dijkstra's algorithm looks a bit like the breadth-first traversal; however, the queue is replaced by a priority queue where the top vertex is the closest to the starting vertex.
+
+The algorithm
+Input:
+    G : directed graph with costs
+    s, t : two vertices
+Output:
+    dist : a map that associates, to each accessible vertex, the cost of the minimum
+            cost walk from s to it
+    prev : a map that maps each accessible vertex to its predecessor on a path from s to it
+Algorithm:
+    PriorityQueue q
+    Dictionary prev
+    Dictionary dist
+    q.enqueue(s, 0)              // second argument is priority
+    dist[s] = 0
+    found = false
+    while not q.isEmpty() and not found do
+        x = q.dequeue()      // dequeues the element with minimum value of priority
+        for y in Nout(x) do
+            if y not in dist.keys() or dist[x] + cost(x,y) < dist[y] then
+                dist[y] = dist[x] + cost(x, y)
+                q.enqueue(y, dist[y])
+                prev[y] = x
+            end if
+        end for
+        if x == t then
+            found = true
+        endif
+    end while
+If all costs are non-negative, the algorithm above doesn't put a vertex into the priority queue once it was extracted and processed (see proof below).
+If there are negative costs, but no negative cost cycles, then a vertex may be processed multiple times. However, if we eliminate the exit on dequeueing the target vertex, the algorithm finishes after a finite number of steps and the result is correct.
+If there is a negative cost cycle accessible from the starting vertex, then the algoritm can end with an incorrect result or it can run forever.
+
+
+def getPath(tree, targetVertex):
+	'''Returns the minimum length path form the root of 'tree' to 'targetVertex'
+		or None if no path exists.
+	   Pre: tree is the result of bfs()
+	'''
+	
+	result = []
+	if not tree.isVertex(targetVertex):
+		return None
+	while targetVertex != tree.getRoot():
+		result.append(targetVertex)
+		targetVertex = tree.getParent(targetVertex)
+	result.append(tree.getRoot())
+	
+	result.reverse()
+	return result

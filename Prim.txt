@@ -1,0 +1,34 @@
+Prim's algorithm
+Idea
+Prim's algorithm is similar to Kruskal's algorithm; however, instead of starting with lots of trees and joining them together, Prim's algorithm starts with a single tree consisting in a single vertex, and then grows it until it covers all the vertices. At each step, an edge is added, connecting an exterior vertex to the tree. Among all the edges connecting a vertex outside the tree with one in the tree, it is choosen the edge of smallest cost.
+
+The algorithm
+Input:
+    G : directed graph with costs
+Output:
+    edges : a collection of edges, forming a minimum cost spanning tree
+Algorithm:
+    PriorityQueue q
+    Dictionary prev
+    Dictionary dist
+    edges = Ø
+    choose s in X arbitrarily
+    vertices = {s}
+    for x in N(x) do
+        dist[x] = cost(x, s)
+        prev[x] = s
+        q.enqueue(x, d[x])              // second argument is priority
+    while not q.isEmpty() do
+        x = q.dequeue()      // dequeues the element with minimum value of priority
+        if x ? vertices then
+            edges.add({x, prev[x]})
+            vertices.add(x)
+            for y in N(x) do
+                if y not in dist.keys() or cost(x,y) < dist[y] then
+                    dist[y] = cost(x, y)
+                    q.enqueue(y, dist[y])
+                    prev[y] = x
+                end if
+            end for
+        end if
+    end while
